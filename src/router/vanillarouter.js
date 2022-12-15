@@ -1,12 +1,16 @@
 import Events from "./events.js";
 
 const ROUTER_TYPES = {
-    hash: "hash", history: "history"
-}, defer = x => { setTimeout(() => x(), 10); }
+        hash: "hash",
+        history: "history",
+    },
+    defer = (x) => {
+        setTimeout(() => x(), 10);
+    };
 
 /**
  * SPA Router - replacement for Framework Routers (history and hash).
-*/
+ */
 class VanillaRouter {
     constructor(options = {}) {
         this.events = new Events(this);
@@ -20,14 +24,12 @@ class VanillaRouter {
     listen() {
         this.routeHash = Object.keys(this.options.routes);
 
-        if (!this.routeHash.includes("/"))
-            throw TypeError("No home route found");
+        if (!this.routeHash.includes("/")) throw TypeError("No home route found");
 
         if (this.isHashRouter) {
-            window.addEventListener('hashchange', this._hashChanged.bind(this));
+            window.addEventListener("hashchange", this._hashChanged.bind(this));
             defer(() => this._tryNav(document.location.hash.substr(1)));
-        }
-        else {
+        } else {
             let href = document.location.origin;
             if (this._findRoute(document.location.pathname)) {
                 href += document.location.pathname;
@@ -41,7 +43,7 @@ class VanillaRouter {
     }
 
     _hashChanged() {
-        this._tryNav(document.location.hash.substr(1))
+        this._tryNav(document.location.hash.substr(1));
     }
 
     _triggerPopState(e) {
@@ -50,12 +52,18 @@ class VanillaRouter {
 
     _triggerRouteChange(path, url) {
         this.events.trigger("route", {
-            route: this.options.routes[path], path: path, url: url
-        })
+            route: this.options.routes[path],
+            path: path,
+            url: url,
+        });
     }
 
     _findRoute(url) {
-        var test = "/" + url.match(/([A-Za-z_0-9.]*)/gm, (match, token) => { return token })[1];
+        var test =
+            "/" +
+            url.match(/([A-Za-z_0-9.]*)/gm, (match, token) => {
+                return token;
+            })[1];
         return this.routeHash.includes(test) ? test : null;
     }
 
@@ -77,24 +85,23 @@ class VanillaRouter {
         if (this.isHashRouter && href.startsWith("#")) {
             href = href.substr(1);
         }
-        return new URL(href, document.location.origin)
+        return new URL(href, document.location.origin);
     }
 
-    _onNavClick(e) { // handle click in document
+    _onNavClick(e) {
+        // handle click in document
         const href = e.target?.closest("[href]")?.href;
-        if (href && this._tryNav(href))
-            e.preventDefault();
-    };
+        if (href && this._tryNav(href)) e.preventDefault();
+    }
 
     /**
      * Makes the router navigate to the given route
-     * @param {String} path 
+     * @param {String} path
      */
     setRoute(path) {
-        if (!this._findRoute(path))
-            throw TypeError("Invalid route");
+        if (!this._findRoute(path)) throw TypeError("Invalid route");
 
-        let href = this.isHashRouter ? '#' + path : document.location.origin + path;
+        let href = this.isHashRouter ? "#" + path : document.location.origin + path;
         history.replaceState(null, null, href);
         this._tryNav(href);
     }
