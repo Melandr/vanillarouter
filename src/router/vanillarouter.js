@@ -11,7 +11,7 @@ const ROUTER_TYPES = {
 /**
  * SPA Router - replacement for Framework Routers (history and hash).
  */
-class VanillaRouter {
+class Router {
     constructor(options = {}) {
         this.events = new Events(this);
         this.options = { type: ROUTER_TYPES.hash, ...options };
@@ -31,6 +31,7 @@ class VanillaRouter {
             defer(() => this._tryNav(document.location.hash.substr(1)));
         } else {
             let href = document.location.origin;
+
             if (this._findRoute(document.location.pathname)) {
                 href += document.location.pathname;
             }
@@ -58,15 +59,18 @@ class VanillaRouter {
         });
     }
 
+    //метод поиска маршрута в массиве маршрутов
     _findRoute(url) {
         var test =
             "/" +
             url.match(/([A-Za-z_0-9.]*)/gm, (match, token) => {
                 return token;
             })[1];
+
         return this.routeHash.includes(test) ? test : null;
     }
 
+    //метод проверяет наличие маршрута в массиве маршрутов и создает новую запись в истории
     _tryNav(href) {
         const url = this._createUrl(href);
         if (url.protocol.startsWith("http")) {
@@ -75,6 +79,7 @@ class VanillaRouter {
                 if (this.options.type === "history") {
                     window.history.pushState({ path: routePath }, routePath, url.origin + url.pathname);
                 }
+
                 this._triggerRouteChange(routePath, url);
                 return true;
             }
@@ -88,14 +93,17 @@ class VanillaRouter {
         return new URL(href, document.location.origin);
     }
 
+    //метод отменяет действие по умолчанию при клике по ссылке, если маршрут есть в массиве маршрутов
     _onNavClick(e) {
-        // handle click in document
+        // обрабатывает клик в документе
         const href = e.target?.closest("[href]")?.href;
+        console.log(href);
+        // e.preventDefault();
         if (href && this._tryNav(href)) e.preventDefault();
     }
 
     /**
-     * Makes the router navigate to the given route
+     * Заставляет маршрутизатор перейти к заданному маршруту
      * @param {String} path
      */
     setRoute(path) {
@@ -111,4 +119,4 @@ class VanillaRouter {
     }
 }
 
-export default VanillaRouter;
+export default Router;

@@ -1,5 +1,5 @@
 import "./style.css";
-import VanillaRouter from "./router/vanillarouter";
+import Router from "./router/vanillarouter";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -16,7 +16,7 @@ const options = {
     },
 };
 
-const router = new VanillaRouter(options).listen().on("route", (e) => {
+const router = new Router(options).listen().on("route", (e) => {
     const { route } = e.detail;
 
     switch (route) {
@@ -31,8 +31,8 @@ const router = new VanillaRouter(options).listen().on("route", (e) => {
             break;
 
         default:
-            setRoute("home");
-            // section.innerHTML = Home();
+            // setRoute("home");
+            section.innerHTML = Home();
             break;
     }
 });
@@ -78,3 +78,5 @@ const router = new VanillaRouter(options).listen().on("route", (e) => {
 // });
 
 window.router = router;
+
+
