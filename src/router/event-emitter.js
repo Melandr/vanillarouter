@@ -3,8 +3,7 @@ class Emitter {
     constructor(obj) {
         this.obj = obj;
         this.eventTarget = document.createDocumentFragment();
-        ["addEventListener", "dispatchEvent", "removeEventListener"]
-            .forEach(this.delegate, this);
+        ["addEventListener", "dispatchEvent", "removeEventListener"].forEach(this.delegate, this);
     }
 
     delegate(method) {
@@ -12,22 +11,24 @@ class Emitter {
     }
 }
 
-class Events {
+class EventEmitter {
     constructor(host) {
         this.host = host;
         new Emitter(host); // add simple event system
-        host.on = (eventName, func) => {
-            host.addEventListener(eventName, func);
-            return host;
-        }
+
+        this.host.on = this.on;
+    }
+
+    on(event, func) {
+        this.addEventListener(event, func);
+
+        return this;
     }
 
     trigger(event, detail, ev) {
-        if (typeof (event) === "object" && event instanceof Event)
-            return this.host.dispatchEvent(event);
+        if (typeof event === "object" && event instanceof Event) return this.host.dispatchEvent(event);
 
-        if (!ev)
-            ev = new Event(event, { bubbles: false, cancelable: true });
+        if (!ev) ev = new Event(event, { bubbles: false, cancelable: true });
 
         ev.detail = { ...(detail || {}), host: this.host };
 
@@ -35,4 +36,4 @@ class Events {
     }
 }
 
-export default Events;
+export default EventEmitter;

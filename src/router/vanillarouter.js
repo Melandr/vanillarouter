@@ -1,4 +1,4 @@
-import Events from "./events.js";
+import EventEmitter from "./event-emitter.js";
 
 const ROUTER_TYPES = {
         hash: "hash",
@@ -13,7 +13,7 @@ const ROUTER_TYPES = {
  */
 class Router {
     constructor(options = {}) {
-        this.events = new Events(this);
+        this.events = new EventEmitter(this);
         this.options = { type: ROUTER_TYPES.hash, ...options };
     }
 
@@ -97,8 +97,7 @@ class Router {
     _onNavClick(e) {
         // обрабатывает клик в документе
         const href = e.target?.closest("[href]")?.href;
-        console.log(href);
-        // e.preventDefault();
+
         if (href && this._tryNav(href)) e.preventDefault();
     }
 

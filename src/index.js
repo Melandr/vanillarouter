@@ -18,7 +18,7 @@ const options = {
 
 const router = new Router(options).listen().on("route", (e) => {
     const { route } = e.detail;
-
+    console.log(route);
     switch (route) {
         case "home":
             section.innerHTML = Home();
@@ -78,5 +78,3 @@ const router = new Router(options).listen().on("route", (e) => {
 // });
 
 window.router = router;
-
-
