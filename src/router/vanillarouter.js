@@ -28,7 +28,7 @@ class Router {
 
         if (this.isHashRouter) {
             window.addEventListener("hashchange", this._hashChanged.bind(this));
-            defer(() => this._tryNav(document.location.hash.substr(1)));
+            defer(() => this._tryNav(document.location.hash.substring(1)));
         } else {
             let href = document.location.origin;
 
@@ -44,7 +44,7 @@ class Router {
     }
 
     _hashChanged() {
-        this._tryNav(document.location.hash.substr(1));
+        this._tryNav(document.location.hash.substring(1));
     }
 
     _triggerPopState(e) {
